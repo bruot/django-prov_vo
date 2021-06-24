@@ -19,8 +19,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 from django.utils.datastructures import MultiValueDict
 
-from braces.views import JSONResponseMixin
-
 #from rest_framework.renderers import XMLRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
