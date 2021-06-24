@@ -1,6 +1,6 @@
 import sys # just for debugging
 import json
-import urllib
+import urllib.parse
 from datetime import datetime
 
 from django.conf import settings
@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseServerError
 from django.http import Http404
 #from django.template import loader
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.views import generic
 from django.http import JsonResponse
@@ -24,9 +24,9 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework import viewsets
 
-import utils
-from utils import QueryDictDALI
-from decorators import exceptions_to_http_status
+import prov_vo.utils as utils
+from prov_vo.utils import QueryDictDALI
+from prov_vo.decorators import exceptions_to_http_status
 
 from .models import (
     Activity,
@@ -330,7 +330,7 @@ def provdal_form(request):
                     urlparams['RESPONSEFORMAT'] = str(format).upper()
 
                 return HttpResponseRedirect(
-                    reverse('prov_vo:provdal')+"?" + urllib.urlencode(urlparams)
+                    reverse('prov_vo:provdal')+"?" + urllib.parse.urlencode(urlparams)
                 )
 
             except ValueError:
@@ -503,7 +503,7 @@ def provdal(request):
     # now add all linked descriptions
     for key in ['entity', 'activity', 'used', 'wasGeneratedBy', 'parameter']:
         if key in prov:
-            for id, o in prov[key].iteritems():
+            for id, o in prov[key].items():
                 if o.description:
                     prov[key + 'Description'][o.description.id] = o.description
 

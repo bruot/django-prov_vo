@@ -3,19 +3,25 @@ from __future__ import unicode_literals
 import json
 
 from django.utils.xmlutils import SimplerXMLGenerator
-from django.utils.six.moves import StringIO
+from io import StringIO
 from django.utils.encoding import smart_text
-from django.utils.encoding import smart_unicode
 from django.utils import timezone
 from rest_framework.renderers import BaseRenderer
 from lxml import etree
 
+def _remove_empty_dicts(data):
+    result = dict()
+
+    for k, v in data.items():
+        if len(v) > 0:
+            result[k] = v
+
+    return result
+
+
 class PROVJSONRenderer(BaseRenderer):
     def render(self, data):
-        # remove empty dicts
-        for key, value in data.iteritems():
-            if len(value) == 0:
-                data.pop(key)
+        data = _remove_empty_dicts(data)
 
         string = json.dumps(data,
                 #sort_keys=True,
@@ -27,13 +33,10 @@ class PROVJSONRenderer(BaseRenderer):
 
 class PROVXMLRenderer(BaseRenderer):
     def render(self, data):
-        # remove empty dicts
-        for key, value in data.iteritems():
-            if len(value) == 0:
-                data.pop(key)
+        data = _remove_empty_dicts(data)
 
         nsmap = {}
-        for prefix, ns in data['prefix'].iteritems():
+        for prefix, ns in data['prefix'].items():
             nsmap[prefix] = ns
         data.pop('prefix')
         PROV = "{%s}" % nsmap['voprov']
@@ -72,13 +75,10 @@ class PROVXMLRenderer(BaseRenderer):
 class W3CPROVXMLRenderer(BaseRenderer):
     def render(self, data):
 
-        # remove empty dicts
-        for key, value in data.iteritems():
-            if len(value) == 0:
-                data.pop(key)
+        data = _remove_empty_dicts(data)
 
         nsmap = {}
-        for prefix, ns in data['prefix'].iteritems():
+        for prefix, ns in data['prefix'].items():
             nsmap[prefix] = ns
         data.pop('prefix')
         PROV = "{%s}" % nsmap['prov']
@@ -166,7 +166,7 @@ class PROVNBaseRenderer(BaseRenderer):
         # construct string for optional attributes,
         # and add to provn-string (just before final closing ")" )
         attributes = ""
-        for key, val in obj.iteritems():
+        for key, val in obj.items():
             attributes += '%s="%s", ' % (key, val)
 
         # add to string (and remove final comma)
@@ -484,75 +484,75 @@ class PROVNRenderer(PROVNBaseRenderer):
     def render(self, data):
 
         string = "document\n"
-        for p_id, p in data['prefix'].iteritems():
+        for p_id, p in data['prefix'].items():
             string += "prefix %s <%s>\n" % (p_id, p)
         string += "\n"
 
-        for a_id, a in data['activity'].iteritems():
+        for a_id, a in data['activity'].items():
             string += ActivityPROVNRenderer().render(a) + "\n"
 
         if 'activityFlow' in data:
-            for a_id, a in data['activityFlow'].iteritems():
+            for a_id, a in data['activityFlow'].items():
                 string += ActivityFlowPROVNRenderer().render(a) + "\n"
 
         if 'activityDescription' in data:
-            for a_id, a in data['activityDescription'].iteritems():
+            for a_id, a in data['activityDescription'].items():
                 string += ActivityDescriptionPROVNRenderer().render(a) + "\n"
 
         if 'parameter' in data:
-            for p_id, p in data['parameter'].iteritems():
+            for p_id, p in data['parameter'].items():
                 string += ParameterPROVNRenderer().render(p) + "\n"
 
         if 'parameterDescription' in data:
-            for h_id, h in data['parameterDescription'].iteritems():
+            for h_id, h in data['parameterDescription'].items():
                 string += ParameterDescriptionPROVNRenderer().render(h) + "\n"
 
-        for e_id, e in data['entity'].iteritems():
+        for e_id, e in data['entity'].items():
             string += EntityPROVNRenderer().render(e) + "\n"
 
         if 'entityDescription' in data:
-            for a_id, a in data['entityDescription'].iteritems():
+            for a_id, a in data['entityDescription'].items():
                 string += EntityDescriptionPROVNRenderer().render(a) + "\n"
 
-        for a_id, a in data['agent'].iteritems():
+        for a_id, a in data['agent'].items():
             string += AgentPROVNRenderer().render(a) + "\n"
 
-        for u_id, u in data['used'].iteritems():
+        for u_id, u in data['used'].items():
             string += UsedPROVNRenderer().render(u) + "\n"
 
         if 'usedDescription' in data:
-            for u_id, u in data['usedDescription'].iteritems():
+            for u_id, u in data['usedDescription'].items():
                 string += UsedDescriptionPROVNRenderer().render(u) + "\n"
 
-        for w_id, w in data['wasGeneratedBy'].iteritems():
+        for w_id, w in data['wasGeneratedBy'].items():
             string += WasGeneratedByPROVNRenderer().render(w) + "\n"
 
         if 'wasGeneratedByDescription' in data:
-            for w_id, w in data['wasGeneratedByDescription'].iteritems():
+            for w_id, w in data['wasGeneratedByDescription'].items():
                 string += WasGeneratedByDescriptionPROVNRenderer().render(w) + "\n"
 
-        for w_id, w in data['wasAssociatedWith'].iteritems():
+        for w_id, w in data['wasAssociatedWith'].items():
             string += WasAssociatedWithPROVNRenderer().render(w) + "\n"
 
-        for w_id, w in data['wasAttributedTo'].iteritems():
+        for w_id, w in data['wasAttributedTo'].items():
             string += WasAttributedToPROVNRenderer().render(w) + "\n"
 
-        for h_id, h in data['hadMember'].iteritems():
+        for h_id, h in data['hadMember'].items():
             string += HadMemberPROVNRenderer().render(h) + "\n"
 
-        for w_id, w in data['wasDerivedFrom'].iteritems():
+        for w_id, w in data['wasDerivedFrom'].items():
             string += WasDerivedFromPROVNRenderer().render(w) + "\n"
 
         if 'hadStep' in data:
-            for h_id, h in data['hadStep'].iteritems():
+            for h_id, h in data['hadStep'].items():
                 string += HadStepPROVNRenderer().render(h) + "\n"
 
         if 'wasInformedBy' in data:
-            for w_id, w in data['wasInformedBy'].iteritems():
+            for w_id, w in data['wasInformedBy'].items():
                 string += WasInformedByPROVNRenderer().render(w) + "\n"
 
         if 'wasInfluencedBy' in data:
-            for w_id, w in data['wasInfluencedBy'].iteritems():
+            for w_id, w in data['wasInfluencedBy'].items():
                 string += WasInfluencedByPROVNRenderer().render(w) + "\n"
 
         string += "endDocument"

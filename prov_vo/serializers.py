@@ -488,42 +488,42 @@ class W3CProvenanceSerializer(serializers.Serializer):
     # adjust the serialization, where necessary, for each item
     def get_activity(self, obj):
         activity = {}
-        for a_id, a in obj['activity'].iteritems():
+        for a_id, a in obj['activity'].items():
             data = W3CActivitySerializer(a).data
             activity[a_id] = data
 
         # add activities that are stored as activityFlow to
         # "normal" activities for W3C serialisation,
-        for a_id, a in obj['activityFlow'].iteritems():
+        for a_id, a in obj['activityFlow'].items():
             data = W3CActivityFlowSerializer(a).data
             activity[a_id] = data
         return activity
 
     def get_entity(self, obj):
         entity = {}
-        for e_id, e in obj['entity'].iteritems():
+        for e_id, e in obj['entity'].items():
             data = W3CEntitySerializer(e).data
             entity[e_id] = data
 
         # add collections to entities as well
         # -- actually not needed, since they are added as entities only in utils.track-functions
-        for e_id, e in obj['collection'].iteritems():
+        for e_id, e in obj['collection'].items():
             data = W3CCollectionSerializer(e).data
             entity[e_id] = data
 
         # and add parameters
-        for p_id, p in obj['parameter'].iteritems():
+        for p_id, p in obj['parameter'].items():
             data = W3CParameterSerializer(p).data
             entity[p_id] = data
             # add additionally needed used-relationship at "get_used"
 
         # and add descriptions
         # -> no, rather merge with entity/activity
-        #for e_id, e in obj['entityDescription'].iteritems():
+        #for e_id, e in obj['entityDescription'].items():
         #    data = W3CEntityDescriptionSerializer(e).data
         #    entity[e_id] = data
 
-        #for e_id, e in obj['activityDescription'].iteritems():
+        #for e_id, e in obj['activityDescription'].items():
         #    data = W3CActivityDescriptionSerializer(e).data
         #    entity[e_id] = data
 
@@ -531,7 +531,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_agent(self, obj):
         agent = {}
-        for a_id, a in obj['agent'].iteritems():
+        for a_id, a in obj['agent'].items():
             data = AgentSerializer(a).data
             agent[a_id] = data
 
@@ -539,14 +539,14 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_used(self, obj):
         used = {}
-        for u_id, u in obj['used'].iteritems():
+        for u_id, u in obj['used'].items():
             data = W3CUsedSerializer(u).data
             u_id = self.add_namespace_to_id(u_id)
             used[u_id] = self.restructure_relations(data)
 
         # add one used-relationship for each parameter, only temporary (do not save!):
         num_param = 0
-        for p_id, p in obj['parameter'].iteritems():
+        for p_id, p in obj['parameter'].items():
             activity = p.activity
             u_id = 'p%s' % num_param
             data = {'id': u_id, 'activity': activity.id, 'entity': p_id, 'role': 'voprov:parameter'}
@@ -560,7 +560,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_wasGeneratedBy(self, obj):
         wasGeneratedBy = {}
-        for w_id, w in obj['wasGeneratedBy'].iteritems():
+        for w_id, w in obj['wasGeneratedBy'].items():
             data = W3CWasGeneratedBySerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasGeneratedBy[w_id] = self.restructure_relations(data)
@@ -569,7 +569,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_wasAssociatedWith(self, obj):
         wasAssociatedWith = {}
-        for w_id, w in obj['wasAssociatedWith'].iteritems():
+        for w_id, w in obj['wasAssociatedWith'].items():
             data = WasAssociatedWithSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasAssociatedWith[w_id] = self.restructure_relations(data)
@@ -578,7 +578,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_wasAttributedTo(self, obj):
         wasAttributedTo = {}
-        for w_id, w in obj['wasAttributedTo'].iteritems():
+        for w_id, w in obj['wasAttributedTo'].items():
             data = WasAttributedToSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasAttributedTo[w_id] = self.restructure_relations(data)
@@ -587,7 +587,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_hadMember(self, obj):
         hadMember = {}
-        for h_id, h in obj['hadMember'].iteritems():
+        for h_id, h in obj['hadMember'].items():
             data = HadMemberSerializer(h).data
             h_id = self.add_namespace_to_id(h_id)
             hadMember[h_id] = self.restructure_relations(data)
@@ -596,7 +596,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_wasDerivedFrom(self, obj):
         wasDerivedFrom = {}
-        for w_id, w in obj['wasDerivedFrom'].iteritems():
+        for w_id, w in obj['wasDerivedFrom'].items():
             data = WasDerivedFromSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasDerivedFrom[w_id] = self.restructure_relations(data)
@@ -605,7 +605,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
 
     def get_wasInformedBy(self, obj):
         wasInformedBy = {}
-        for w_id, w in obj['wasInformedBy'].iteritems():
+        for w_id, w in obj['wasInformedBy'].items():
             data = WasInformedBySerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasInformedBy[w_id] = self.restructure_relations(data)
@@ -615,7 +615,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
     def get_wasInfluencedBy(self, obj):
         wasInfluencedBy = {}
         # go through all hadStep relations
-        for w_id, w in obj['hadStep'].iteritems():
+        for w_id, w in obj['hadStep'].items():
             data = W3CHadStepSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasInfluencedBy[w_id] = self.restructure_relations(data)
@@ -630,7 +630,7 @@ class W3CProvenanceSerializer(serializers.Serializer):
         # (since it is used as key for this class instance anyway)
         #data.pop('id')
 
-        for key, value in data.iteritems():
+        for key, value in data.items():
             # restructure serialisation of qualified values
             if ':' in value:
                 # need to split up, specify that qualified string is used
@@ -665,16 +665,19 @@ class W3CProvenanceSerializer(serializers.Serializer):
         # (since it is used as key for this class instance anyway)
         # data.pop('id') --> done for each relation in serial. class, except description-relations
 
-        for key, value in data.iteritems():
-
+        result = dict()
+        for key, value in data.items():
             # replace prov_ by prov for the given keys:
             if key in ['id', 'activity', 'entity', 'collection', 'agent',
                         'generatedEntity', 'usedEntity', 'usage', 'generation', 'role',
                         'informed', 'informant', 'influencee', 'influencer', 'description']:
-                newkey = 'prov:' + key
-                data[newkey] = data.pop(key)
+                new_key = 'prov:' + key
+            else:
+                new_key = key
 
-        return data
+            result[new_key] = data[key]
+
+        return result
 
 
 # IVOA specific serializers
@@ -909,7 +912,7 @@ class VOProvenanceSerializer(serializers.Serializer):
     # adjust the serialization, where necessary, for each item
     def get_activity(self, obj):
         activity = {}
-        for a_id, a in obj['activity'].iteritems():
+        for a_id, a in obj['activity'].items():
             data = VOActivitySerializer(a).data
             activity[a_id] = data
             #print 'act_id: ', activity[a_id]
@@ -918,7 +921,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_activityFlow(self, obj):
         activityFlow = {}
-        for a_id, a in obj['activityFlow'].iteritems():
+        for a_id, a in obj['activityFlow'].items():
             data = VOActivityFlowSerializer(a).data
             activityFlow[a_id] = data
 
@@ -926,7 +929,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_activityDescription(self, obj):
         activityDescription = {}
-        for a_id, a in obj['activityDescription'].iteritems():
+        for a_id, a in obj['activityDescription'].items():
             data = VOActivityDescriptionSerializer(a).data
             activityDescription[a_id] = data
 
@@ -934,7 +937,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_entity(self, obj):
         entity = {}
-        for e_id, e in obj['entity'].iteritems():
+        for e_id, e in obj['entity'].items():
             data = VOEntitySerializer(e).data
             entity[e_id] = data
 
@@ -942,7 +945,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_collection(self, obj):
         collection = {}
-        for c_id, c in obj['collection'].iteritems():
+        for c_id, c in obj['collection'].items():
             data = VOCollectionSerializer(c).data
             collection[c_id] = data
 
@@ -950,7 +953,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_entityDescription(self, obj):
         entityDescription = {}
-        for e_id, e in obj['entityDescription'].iteritems():
+        for e_id, e in obj['entityDescription'].items():
             data = VOEntityDescriptionSerializer(e).data
             entityDescription[e_id] = data
 
@@ -958,7 +961,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_agent(self, obj):
         agent = {}
-        for a_id, a in obj['agent'].iteritems():
+        for a_id, a in obj['agent'].items():
             data = VOAgentSerializer(a).data
             agent[a_id] = data
 
@@ -966,7 +969,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_parameter(self, obj):
         parameter = {}
-        for p_id, p in obj['parameter'].iteritems():
+        for p_id, p in obj['parameter'].items():
             data = VOParameterSerializer(p).data
             parameter[p_id] = data
             #print 'param_id: ', parameter[p_id]
@@ -974,7 +977,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_parameterDescription(self, obj):
         parameterDescription = {}
-        for p_id, p in obj['parameterDescription'].iteritems():
+        for p_id, p in obj['parameterDescription'].items():
             data = VOParameterDescriptionSerializer(p).data
             parameterDescription[p_id] = data
             #print 'paramdesc: ', data
@@ -982,7 +985,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_used(self, obj):
         used = {}
-        for u_id, u in obj['used'].iteritems():
+        for u_id, u in obj['used'].items():
             data = VOUsedSerializer(u).data
             u_id = self.add_namespace_to_id(u_id)
             used[u_id] = self.restructure_relations(data)
@@ -991,7 +994,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_usedDescription(self, obj):
         usedDescription = {}
-        for u_id, u in obj['usedDescription'].iteritems():
+        for u_id, u in obj['usedDescription'].items():
             data = VOUsedDescriptionSerializer(u).data
             u_id = self.add_namespace_to_id(u_id)
             usedDescription[u_id] = self.restructure_relations(data)
@@ -1000,7 +1003,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasGeneratedBy(self, obj):
         wasGeneratedBy = {}
-        for w_id, w in obj['wasGeneratedBy'].iteritems():
+        for w_id, w in obj['wasGeneratedBy'].items():
             data = VOWasGeneratedBySerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasGeneratedBy[w_id] = self.restructure_relations(data)
@@ -1009,7 +1012,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasGeneratedByDescription(self, obj):
         wasGeneratedByDescription = {}
-        for w_id, w in obj['wasGeneratedByDescription'].iteritems():
+        for w_id, w in obj['wasGeneratedByDescription'].items():
             data = VOWasGeneratedByDescriptionSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasGeneratedByDescription[w_id] = self.restructure_relations(data)
@@ -1018,7 +1021,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasAssociatedWith(self, obj):
         wasAssociatedWith = {}
-        for w_id, w in obj['wasAssociatedWith'].iteritems():
+        for w_id, w in obj['wasAssociatedWith'].items():
             data = VOWasAssociatedWithSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasAssociatedWith[w_id] = self.restructure_relations(data)
@@ -1027,7 +1030,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasAttributedTo(self, obj):
         wasAttributedTo = {}
-        for w_id, w in obj['wasAttributedTo'].iteritems():
+        for w_id, w in obj['wasAttributedTo'].items():
             data = VOWasAttributedToSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasAttributedTo[w_id] = self.restructure_relations(data)
@@ -1036,7 +1039,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_hadMember(self, obj):
         hadMember = {}
-        for h_id, h in obj['hadMember'].iteritems():
+        for h_id, h in obj['hadMember'].items():
             data = VOHadMemberSerializer(h).data
             h_id = self.add_namespace_to_id(h_id)
             hadMember[h_id] = self.restructure_relations(data)
@@ -1045,7 +1048,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasDerivedFrom(self, obj):
         wasDerivedFrom = {}
-        for w_id, w in obj['wasDerivedFrom'].iteritems():
+        for w_id, w in obj['wasDerivedFrom'].items():
             data = VOWasDerivedFromSerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasDerivedFrom[w_id] = self.restructure_relations(data)
@@ -1054,7 +1057,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_hadStep(self, obj):
         hadStep = {}
-        for h_id, h in obj['hadStep'].iteritems():
+        for h_id, h in obj['hadStep'].items():
             data = VOHadStepSerializer(h).data
             h_id = self.add_namespace_to_id(h_id)
             hadStep[h_id] = self.restructure_relations(data)
@@ -1063,7 +1066,7 @@ class VOProvenanceSerializer(serializers.Serializer):
 
     def get_wasInformedBy(self, obj):
         wasInformedBy = {}
-        for w_id, w in obj['wasInformedBy'].iteritems():
+        for w_id, w in obj['wasInformedBy'].items():
             data = VOWasInformedBySerializer(w).data
             w_id = self.add_namespace_to_id(w_id)
             wasInformedBy[w_id] = self.restructure_relations(data)
@@ -1089,19 +1092,19 @@ class VOProvenanceSerializer(serializers.Serializer):
         # (since it is used as key for this class instance anyway)
         #data.pop('id')
 
-        for key, value in data.iteritems():
+        result = OrderedDict()
+        for key, value in data.items():
 
             # replace prov_ by prov for the given keys:
             if key in ['id', 'activity', 'activityFlow', 'entity', 'collection', 'agent',
                         'generatedEntity', 'usedEntity', 'usage', 'generation', 'role',
-                        'informed', 'informant', 'description']:
-                newkey = 'voprov:' + key
-                data[newkey] = data.pop(key)
+                        'informed', 'informant', 'description', 'activityDescription', 'entityDescription']:
+                new_key = 'voprov:' + key
+            else:
+                new_key = key
+            result[new_key] = data[key]
 
-            if key in ['activityDescription', 'entityDescription']:
-                data['voprov:' + key] = data.pop(key)
-
-        return data
+        return result
 
 
 class ProvenanceGraphSerializer(serializers.Serializer):
@@ -1139,7 +1142,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
         # nodes
         for key in ['activity', 'entity', 'agent', 'activityFlow', 'collection']:
             if key in obj:
-                for n_id, n in obj[key].iteritems():
+                for n_id, n in obj[key].items():
                     nodes.append({'name': n[name], 'type': key})
                     map_nodes_ids[n[nid]] = count_nodes
                     count_nodes += 1
@@ -1161,7 +1164,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
         count_links = 0
 
         if 'used' in obj:
-            for r_id, r in obj['used'].iteritems():
+            for r_id, r in obj['used'].items():
                 value = 0.5
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('activity', ns)]],
@@ -1172,7 +1175,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'wasGeneratedBy' in obj:
-            for r_id, r in obj['wasGeneratedBy'].iteritems():
+            for r_id, r in obj['wasGeneratedBy'].items():
                 value = 0.5
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('entity', ns)]],
@@ -1183,7 +1186,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'wasAssociatedWith' in obj:
-            for r_id, r in obj['wasAssociatedWith'].iteritems():
+            for r_id, r in obj['wasAssociatedWith'].items():
                 value = 0.2
                 # if there is an agent, link to it:
                 if self.add_namespace('agent', ns) in r:
@@ -1205,7 +1208,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                     count_links += 1
 
         if 'wasAttributedTo' in obj:
-            for r_id, r in obj['wasAttributedTo'].iteritems():
+            for r_id, r in obj['wasAttributedTo'].items():
                 value = 0.2
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('agent', ns)]],
@@ -1216,7 +1219,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'hadMember' in obj:
-            for r_id, r in obj['hadMember'].iteritems():
+            for r_id, r in obj['hadMember'].items():
                 value = 0.2
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('collection', ns)]],
@@ -1227,7 +1230,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'wasDerivedFrom' in obj:
-            for r_id, r in obj['wasDerivedFrom'].iteritems():
+            for r_id, r in obj['wasDerivedFrom'].items():
                 value = 0.2
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('generatedEntity', ns)]],
@@ -1238,7 +1241,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'hadStep' in obj:
-            for r_id, r in obj['hadStep'].iteritems():
+            for r_id, r in obj['hadStep'].items():
                 value = 0.2
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('activityFlow', ns)]],
@@ -1249,7 +1252,7 @@ class ProvenanceGraphSerializer(serializers.Serializer):
                 count_links += 1
 
         if 'wasInformedBy' in obj:
-            for r_id, r in obj['wasInformedBy'].iteritems():
+            for r_id, r in obj['wasInformedBy'].items():
                 value = 0.2
                 links.append({
                     'source': map_nodes_ids[r[self.add_namespace('informed', ns)]],

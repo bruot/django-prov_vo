@@ -79,5 +79,5 @@ class ProvDalForm(forms.Form):
         formsettings = settings.PROV_VO_CONFIG['provdalform']
         if 'obj_id.help_text' in formsettings:
             obj_id.help_text = formsettings['obj_id.help_text']
-    except KeyError, e:
+    except KeyError:
         pass

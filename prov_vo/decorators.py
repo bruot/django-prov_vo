@@ -1,6 +1,6 @@
 from functools import wraps
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
-from utils import InvalidDataError
+from prov_vo.utils import InvalidDataError
 
 def exceptions_to_http_status(view_func):
     @wraps(view_func)

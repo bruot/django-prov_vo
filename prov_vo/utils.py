@@ -32,7 +32,7 @@ class QueryDictDALI(QueryDict):
         if querydict:
 
             # copy values
-            for key, values in querydict.iterlists():
+            for key, values in querydict.lists():
                 self.setlist(key, values)
 
             # make it all upper case
