@@ -1,0 +1,5 @@
+__pycache__/
+/.idea/
+/django_prov_vo.egg-info/
+/venv/
+*~
